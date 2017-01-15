@@ -34,6 +34,10 @@ class WebsocketClient(object):
 
         if message["name"] == "candles":
             self.api.candles.candles_data = message["msg"]["data"]
+                
+        if message["name"] == "newChartData":
+            if(self.api.onactives != None):
+                self.api.onactives(message["msg"])
 
     @staticmethod
     def on_error(wss, error): # pylint: disable=unused-argument
