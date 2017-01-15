@@ -1,6 +1,7 @@
 """Module for IQ Option API."""
-
+import random
 import time
+import ssl
 import json
 import logging
 import threading
@@ -51,7 +52,7 @@ class IQOptionAPI(object):
         :param dict proxies: (optional) The http request proxies.
         """
         self.https_url = "https://{host}/api".format(host=host)
-        self.wss_url = "wss://{host}/echo/websocket".format(host=host)
+        self.wss_url = "wss://{host}/echo/{server}/{channel}/websocket".format(host=host, server=str(random.randint(1,1000)), channel=''.join(random.choice('0123456789abcdefghijklmnopqrstuvwxyz') for i in range(8)))
         self.websocket_client = None
         self.session = requests.Session()
         self.session.verify = False
@@ -117,8 +118,8 @@ class IQOptionAPI(object):
         """
         logger = logging.getLogger(__name__)
 
-        data = json.dumps(dict(name=name,
-                               msg=msg))
+        data = json.dumps([json.dumps(dict(name=name,
+                               msg=msg))])
         logger.debug(data)
         self.websocket.send(data)
 
@@ -274,7 +275,7 @@ class IQOptionAPI(object):
 
     def connect(self):
         """Method for connection to IQ Option API."""
-        response = self.login(self.username, self.password) # pylint: disable=not-callable
+        response = self.loginv2(self.username, self.password) # pylint: disable=not-callable
         ssid = response.cookies["ssid"]
         self.set_session_cookies()
         self.websocket_client = WebsocketClient(self)

@@ -22,10 +22,15 @@ class WebsocketClient(object):
     def on_message(self, wss, message): # pylint: disable=unused-argument
         """Method to process websocket messages."""
         logger = logging.getLogger(__name__)
-        logger.debug(message)
-
-        message = json.loads(str(message))
-
+        logger.debug(message)	
+        if (len(message) < 2):
+           return
+        message = json.loads(json.loads(str(message[1:]))[0])
+        if message["name"] == "buyComplete":
+          if message["msg"]["isSuccessful"]:
+            print("Last buy was success")
+          else:
+            print("Last buy was NOT success")
         if message["name"] == "timeSync":
             self.api.timesync.server_timestamp = message["msg"]
 
