@@ -9,7 +9,7 @@ class GetCandles(Base):
 
     name = "candles"
 
-    def __call__(self, active_id, duration):
+    def __call__(self, active_id, duration, startTimestamp, endTimestamp, chunkSize, callback):
         """Method to send message to candles websocket chanel.
 
         :param active_id: The active identifier.
@@ -17,8 +17,8 @@ class GetCandles(Base):
         """
         data = {"active_id": active_id,
                 "duration": duration,
-                "chunk_size": 25,
-                "from": self.api.timesync.server_timestamp - (duration * 2),
-                "till": self.api.timesync.server_timestamp}
-
+                "chunk_size": chunkSize,
+                "from": startTimestamp,
+                "till": endTimestamp}
+        self.api.oncandles = callback
         self.send_websocket_request(self.name, data)
