@@ -9,10 +9,12 @@ class SetActives(Base):
 
     name = "setActives"
 
-    def __call__(self, actives):
+    def __call__(self, actives, onactives = None):
         """Method to send message to setactives websocket chanel.
 
         :param actives: The list of actives identifiers.
         """
         data = {"actives": actives}
+        self.api.onactives = onactives
         self.send_websocket_request(self.name, data)
+        
