@@ -9,7 +9,7 @@ class Buyv2(Base):
 
     name = "buyV2"
 
-    def __call__(self, price, active, option, direction):
+    def __call__(self, price, active, option, direction, time):
         """Method to send message to buyv2 websocket chanel.
 
         :param price: The buying price.
@@ -19,9 +19,10 @@ class Buyv2(Base):
         """
         data = {"price": price,
                 "act": active,
-                "exp": self.api.timesync.expiration_timestamp,
+                "exp": time,#self.api.timesync.expiration_timestamp
                 "type": option,
                 "direction": direction,
+				#"skey": self.api.skey, #it isn't sent by any standard client
                 "time": self.api.timesync.server_timestamp
                }
 
