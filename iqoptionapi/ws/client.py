@@ -30,7 +30,7 @@ class WebsocketClient(object):
           if message["msg"]["isSuccessful"]:
             print("Last buy was success")
           else:
-            print("Last buy was NOT success")
+            print("Last buy was NOT success: %s") % message["msg"]["message"]
         if message["name"] == "timeSync":
             self.api.timesync.server_timestamp = message["msg"]
 
